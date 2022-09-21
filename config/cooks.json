@@ -1,0 +1,26 @@
+[
+    {
+        "rank": 3,
+        "proficiency": 4,
+        "name": "CHEF",
+        "catch-phrase": "Meat Nugget, Bustling Fungus, Sprouting Egg, Bitter Root and Foreign Fruit"
+      },
+      {
+        "rank": 2,
+        "proficiency": 3,
+        "name": "John Bradford",
+        "catch-phrase": "Those damn ADVENT burgers..."
+      },
+      {
+        "rank": 2,
+        "proficiency": 2,
+        "name": "Meme man",
+        "catch-phrase": "Ha ha, yes, I have achieved cooking."
+      },
+      {
+        "rank": 1,
+        "proficiency": 2,
+        "name": "Raiden Shogun",
+        "catch-phrase": "I can't cook"
+      }
+]
