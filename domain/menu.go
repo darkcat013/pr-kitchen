@@ -8,8 +8,6 @@ import (
 	"github.com/darkcat013/pr-kitchen/utils"
 )
 
-var Menu []Food
-
 func InitializeMenu(jsonPath string) {
 
 	file, err := os.Open(jsonPath)
@@ -24,5 +22,7 @@ func InitializeMenu(jsonPath string) {
 	if Menu == nil {
 		utils.Log.Fatal("Failed to decode menu from " + jsonPath)
 	}
+
 	utils.Log.Info("Menu decoded and set")
+
 }
