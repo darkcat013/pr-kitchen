@@ -42,11 +42,9 @@ func InitializeCooks(jsonPath string) {
 	Cooks = make([]*Cook, 0, len(cookInfos))
 
 	for i := 0; i < len(cookInfos); i++ {
-		cook := Cook{
-			Id:   i,
-			Info: cookInfos[i],
-		}
-		Cooks = append(Cooks, &cook)
+		cook := NewCook(i, &cookInfos[i])
+		Cooks = append(Cooks, cook)
 	}
+
 	utils.Log.Info("Cooks decoded and set")
 }
