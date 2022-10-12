@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/darkcat013/pr-kitchen/utils"
+	"go.uber.org/zap"
 )
 
 func InitializeMenu(jsonPath string) {
@@ -23,6 +24,6 @@ func InitializeMenu(jsonPath string) {
 		utils.Log.Fatal("Failed to decode menu from " + jsonPath)
 	}
 
-	utils.Log.Info("Menu decoded and set")
+	utils.Log.Info("Menu decoded and set", zap.Any("menu", Menu))
 
 }

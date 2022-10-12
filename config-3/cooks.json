@@ -1,0 +1,26 @@
+[
+    {
+        "rank": 3,
+        "proficiency": 4,
+        "name": "Meme man",
+        "catch-phrase": "Ha ha, yes, I have achieved cooking."
+      },
+      {
+        "rank": 2,
+        "proficiency": 3,
+        "name": "Ainsley Harriott",
+        "catch-phrase": "He he boi"
+      },
+      {
+        "rank": 2,
+        "proficiency": 2,
+        "name": "Gordon Ramsay",
+        "catch-phrase": "You f**** donkey"
+      },
+      {
+        "rank": 1,
+        "proficiency": 2,
+        "name": "HowToBasic",
+        "catch-phrase": "Like"
+      }
+]

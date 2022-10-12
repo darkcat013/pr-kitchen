@@ -1,0 +1,26 @@
+[
+    {
+        "rank": 3,
+        "proficiency": 4,
+        "name": "Rank3-4",
+        "catch-phrase": "Proeficiency4"
+      },
+      {
+        "rank": 2,
+        "proficiency": 3,
+        "name": "Rank2-3",
+        "catch-phrase": "Proeficiency3"
+      },
+      {
+        "rank": 2,
+        "proficiency": 2,
+        "name": "Rank2-2",
+        "catch-phrase": "Proeficiency2"
+      },
+      {
+        "rank": 1,
+        "proficiency": 2,
+        "name": "Rank1-2",
+        "catch-phrase": "Proeficiency2"
+      }
+]

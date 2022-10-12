@@ -1,0 +1,26 @@
+[
+    {
+        "rank": 3,
+        "proficiency": 4,
+        "name": "Babushka",
+        "catch-phrase": "Do you even eat?"
+      },
+      {
+        "rank": 2,
+        "proficiency": 3,
+        "name": "Mama",
+        "catch-phrase": "Eat. Now."
+      },
+      {
+        "rank": 2,
+        "proficiency": 2,
+        "name": "Papa",
+        "catch-phrase": "Now look how a master cooks"
+      },
+      {
+        "rank": 1,
+        "proficiency": 2,
+        "name": "Sestra",
+        "catch-phrase": "I don't want to cook anymore"
+      }
+]
