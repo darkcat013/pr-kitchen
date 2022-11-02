@@ -12,9 +12,11 @@ type Apparatus struct {
 }
 
 type ApparatusFoodInfo struct {
-	Food    *Food
-	CookId  int
-	OrderId int
+	Food         *Food
+	PreparedTime float64
+	Priority     int
+	CookId       int
+	OrderId      int
 }
 
 func NewApparatus(id int, name string, channel chan ApparatusFoodInfo) *Apparatus {
@@ -29,23 +31,36 @@ func NewApparatus(id int, name string, channel chan ApparatusFoodInfo) *Apparatu
 
 func (a *Apparatus) Start() {
 	for {
-		cf := <-a.FoodChan
-		utils.Log.Info("Received food in apparatus", zap.Any("details", cf), zap.Int("id", a.Id), zap.String("name", a.Name))
-		utils.SleepFor(cf.Food.PreparationTime)
+		af := <-a.FoodChan
+		utils.Log.Info("Received food in apparatus", zap.Any("details", af), zap.Int("id", a.Id), zap.String("name", a.Name))
 
-		utils.Log.Info("Finished preparing food in apparatus", zap.Any("details", cf), zap.Int("id", a.Id), zap.String("name", a.Name))
+		sleepTime := utils.GetPriorityBasedSleepTime(af.Priority, af.Food.PreparationTime)
 
-		cookingDetail := CookingDetail{
-			FoodId: cf.Food.Id,
-			CookId: cf.CookId,
+		if sleepTime+af.PreparedTime >= af.Food.PreparationTime {
+			sleepTime = af.Food.PreparationTime - af.PreparedTime
 		}
 
-		finishedFood := FinishedFood{
-			Details: cookingDetail,
-			OrderId: cf.OrderId,
+		utils.SleepFor(sleepTime)
+		af.PreparedTime += sleepTime
+
+		if af.PreparedTime >= af.Food.PreparationTime {
+			cookingDetail := CookingDetail{
+				FoodId: af.Food.Id,
+				CookId: af.CookId,
+			}
+
+			finishedFood := FinishedFood{
+				Details: cookingDetail,
+				OrderId: af.OrderId,
+			}
+
+			utils.Log.Info("Finished preparing food in apparatus", zap.Any("details", af), zap.Int("id", a.Id), zap.String("name", a.Name))
+
+			Cooks[af.CookId].ApparatusFoodsChan <- finishedFood
+		} else {
+			utils.Log.Info("Pass food in apparatus", zap.Any("details", af), zap.Int("id", a.Id), zap.String("name", a.Name))
+
+			a.FoodChan <- af
 		}
-
-		FinishedFoodsChan <- finishedFood
-
 	}
 }

@@ -33,7 +33,7 @@ func InitializeApparatuses(jsonPath string) {
 
 	for i := 0; i < len(apparatusInfos); i++ {
 		specificApparatuses := make([]*Apparatus, 0, apparatusInfos[i].Amount)
-		ApparatusesChans[apparatusInfos[i].Name] = make(chan ApparatusFoodInfo, apparatusInfos[i].Amount)
+		ApparatusesChans[apparatusInfos[i].Name] = make(chan ApparatusFoodInfo, 100)
 		for j := 0; j < apparatusInfos[i].Amount; j++ {
 			apparatus := NewApparatus(j, apparatusInfos[i].Name, ApparatusesChans[apparatusInfos[i].Name])
 			specificApparatuses = append(specificApparatuses, apparatus)
