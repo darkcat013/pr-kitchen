@@ -9,8 +9,9 @@ type Food struct {
 }
 
 type StartedFood struct {
-	Food  *Food
-	Order *Order
+	Food         *Food
+	PreparedTime float64
+	Order        *Order
 }
 
 type FinishedFood struct {

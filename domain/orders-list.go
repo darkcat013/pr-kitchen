@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
-	"sync/atomic"
 
 	"github.com/darkcat013/pr-kitchen/config"
 	"github.com/darkcat013/pr-kitchen/utils"
@@ -14,7 +13,6 @@ import (
 func RunOrdersHandling() {
 	go startOrderTracking()
 	go startOrderProcessing()
-	go startOrderSending()
 }
 
 func startOrderTracking() {
@@ -34,13 +32,7 @@ func startOrderTracking() {
 func startOrderProcessing() {
 	for {
 		o := <-NewOrdersChan
-		startedOrder := StartedOrder{
-			Order:    &o,
-			Items:    o.Items,
-			Priority: o.Priority,
-		}
 		utils.Log.Info("Start preparing order", zap.Any("order", o))
-		StartedOrdersChan <- startedOrder
 		Distributions[o.OrderId] = &Distribution{
 			OrderId:    o.OrderId,
 			TableId:    o.TableId,
@@ -50,61 +42,22 @@ func startOrderProcessing() {
 			MaxWait:    o.MaxWait,
 			PickUpTime: o.PickUpTime,
 		}
+		go sendFoodToCooks(o)
 	}
 }
-
-func startOrderSending() {
-	for {
-		so := <-StartedOrdersChan
-		utils.Log.Info("Continue preparing order", zap.Any("order", so))
-
-		switch so.Priority {
-		case 5:
-			go sendFoodToCooks(so, 1)
-		case 4:
-			go sendFoodToCooks(so, 1)
-		case 3:
-			go sendFoodToCooks(so, 2)
-		case 2:
-			go sendFoodToCooks(so, 2)
-		case 1:
-			go sendFoodToCooks(so, 3)
-		}
-	}
-}
-func sendFoodToCooks(so StartedOrder, divisor int) {
-
-	foodAmount := len(so.Items) / divisor
+func sendFoodToCooks(o Order) {
+	foodAmount := len(o.Items)
 
 	for i := 0; i < foodAmount; i++ {
-		var foodId int
-		foodId, so.Items = so.Items[0], so.Items[1:]
-		go sendFood(Menu[foodId-1], so.Order)
+		go sendFood(Menu[o.Items[i]-1], &o)
 	}
-
-	if len(so.Items) == 0 {
-		return
-	}
-
-	so.Priority += 2
-	utils.Log.Info("Send started order back to channel", zap.Any("order", so))
-	StartedOrdersChan <- so
 }
 
 func sendFood(food *Food, order *Order) {
-	foodSent := false
-	for !foodSent {
-		for i := 0; i < len(Cooks); i++ {
-			if Cooks[i].CanCook(food) {
-				utils.Log.Info("Sending food to cook", zap.Int("foodId", food.Id), zap.Int("cookId", Cooks[i].Id), zap.Int64("cookingNow", atomic.LoadInt64(&Cooks[i].CookingNow)))
-				Cooks[i].FoodsChan <- &StartedFood{
-					Food:  food,
-					Order: order,
-				}
-				foodSent = true
-				break
-			}
-		}
+	utils.Log.Info("Sending food to cooks", zap.Int("foodId", food.Id), zap.Int("orderId", order.OrderId))
+	FoodsChan <- &StartedFood{
+		Food:  food,
+		Order: order,
 	}
 }
 
